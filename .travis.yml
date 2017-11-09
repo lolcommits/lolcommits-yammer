@@ -25,7 +25,7 @@ branches:
 
 env:
   global:
-    - CC_TEST_REPORTER_ID=a11f4b88e9bad7b922ca0ce5c70e369d1fd704c1b7c08c5b9e273e29a8c73345
+    - CC_TEST_REPORTER_ID=d7a7dd8f923a2868733d5f066d789f5169dec9ec2a3c6d92ee61815b702c31f8
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

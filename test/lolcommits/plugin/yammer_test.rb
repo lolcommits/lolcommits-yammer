@@ -1,8 +1,8 @@
+require "json"
 require "test_helper"
 require 'webmock/minitest'
 
 describe Lolcommits::Plugin::Yammer do
-
   include Lolcommits::TestHelpers::GitRepo
   include Lolcommits::TestHelpers::FakeIO
 
@@ -39,25 +39,10 @@ describe Lolcommits::Plugin::Yammer do
         read_configuration: {
           "yammer" => {
             "enabled" => true,
-            "endpoint" => "https://yammer.com/uplol",
-            'optional_http_auth_username' => 'joe',
-            'optional_http_auth_password' => '1234'
+            "access_token" => "oV4MuwnNKql3ebJMAYZRaD"
           }
         }
       )
-    end
-
-    describe "initalizing" do
-      it "assigns runner and all plugin options" do
-        plugin.runner.must_equal runner
-        plugin.options.must_equal %w(
-          enabled
-          endpoint
-          optional_key
-          optional_http_auth_username
-          optional_http_auth_password
-        )
-      end
     end
 
     describe "#enabled?" do
@@ -72,28 +57,41 @@ describe Lolcommits::Plugin::Yammer do
     end
 
     describe "run_capture_ready" do
-      before { commit_repo_with_message("first commit!") }
+      before do
+        plugin.config = valid_enabled_config
+        commit_repo_with_message("first commit!")
+      end
+
       after { teardown_repo }
 
-      it "syncs lolcommits" do
+      it "posts lolcommit image to Yammer with commit message" do
         in_repo do
-          plugin.config = valid_enabled_config
+          stub_request(:post, create_message_api_url).to_return(status: 201)
+          output = fake_io_capture { plugin.run_capture_ready }
 
-          stub_request(:post, "https://yammer.com/uplol").to_return(status: 200)
+          output.must_equal "Posting to Yammer ... done!\n"
+          assert_requested :post, create_message_api_url, times: 1, headers: {
+            'Accept'          => 'application/json',
+            'Accept-Encoding' => 'gzip, deflate',
+            'Authorization'   => 'Bearer oV4MuwnNKql3ebJMAYZRaD',
+            'Content-Type'    => /multipart\/form-data/,
+            'User-Agent'      => /Yammer Ruby Gem/
+          }
+        end
+      end
 
-          plugin.run_capture_ready
+      it "reports an error if posting to yammer fails" do
+        in_repo do
+          stub_request(:post, create_message_api_url).to_return(status: 503)
+          output = fake_io_capture { plugin.run_capture_ready }
 
-          assert_requested :post, "https://yammer.com/uplol", times: 1,
-            headers: {'Content-Type' => /multipart\/form-data/ } do |req|
-            req.body.must_match(/Content-Disposition: form-data;.+name="file"; filename="main_image.jpg.+"/)
-            req.body.must_match 'name="repo"'
-            req.body.must_match 'name="author_name"'
-            req.body.must_match 'name="author_email"'
-            req.body.must_match 'name="sha"'
-            req.body.must_match 'name="key"'
-            req.body.must_match "plugin-test-repo"
-            req.body.must_match "first commit!"
-          end
+          output.split("\n").must_equal(
+            [
+              "Posting to Yammer ... failed :(",
+              "Yammer error: Invalid response code (503)",
+              "Try a lolcommits capture with `--debug` and check for errors: `lolcommits -c --debug`"
+            ]
+          )
         end
       end
     end
@@ -108,42 +106,82 @@ describe Lolcommits::Plugin::Yammer do
         plugin.configured?.must_equal true
       end
 
-      it "allows plugin options to be configured" do
-        # enabled, endpoint, key, user, password
-        inputs = %w(
-          true
-          https://my-server.com/uplol
-          key-123
-          joe
-          1337pass
-        )
-        configured_plugin_options = {}
-
-        fake_io_capture(inputs: inputs) do
-          configured_plugin_options = plugin.configure_options!
+      describe "configuring with Yammer Oauth" do
+        before do
+          # allow requests to localhost for this test
+          WebMock.disable_net_connect!(allow_localhost: true)
         end
 
-        configured_plugin_options.must_equal({
-          "enabled" => true,
-          "endpoint" => "https://my-server.com/uplol",
-          "optional_key" => "key-123",
-          "optional_http_auth_username" => "joe",
-          "optional_http_auth_password" => "1337pass"
-        })
-      end
+        after do
+          WebMock.disable_net_connect!
+        end
 
-      describe "#valid_configuration?" do
-        it "returns false for an invalid configuration" do
-          plugin.config = OpenStruct.new(read_configuration: {
-            "lolsrv" => { "endpoint" => "gibberish" }
+        it "aborts if Yammer Oauth is denied" do
+          configured_plugin_options = {}
+          fake_authorize_step
+
+          output = fake_io_capture(inputs: %w(true)) do
+            configured_plugin_options = plugin.configure_options!
+          end
+
+          output.split("\n").last.must_equal(
+            "Aborting.. Plugin disabled since Yammer Oauth was denied"
+          )
+
+          configured_plugin_options.must_equal({ "enabled" => false })
+        end
+
+        it "configures successfully with a Yammer Oauth access token" do
+          configured_plugin_options = {}
+          yammer_oauth_token = "yam-oauth-token"
+          yammer_oauth_code  = "yam-oauth-code"
+          klass              = plugin.class
+
+          stub_request(:post, klass::YAMMER_ACCESS_TOKEN_URL).with(
+            body: {
+              "client_id"     => klass::YAMMER_CLIENT_ID,
+              "client_secret" => klass::YAMMER_CLIENT_SECRET,
+              "code"          => yammer_oauth_code
+            }
+          ).to_return(
+            status: 200,
+            body: {
+              "access_token" => {
+                "token" => yammer_oauth_token
+              }
+            }.to_json
+          )
+
+          fake_authorize_step("?code=#{yammer_oauth_code}")
+
+          fake_io_capture(inputs: %w(true)) do
+            configured_plugin_options = plugin.configure_options!
+          end
+
+          configured_plugin_options.must_equal({
+            "enabled" => true,
+            "access_token" => "yam-oauth-token"
           })
-          plugin.valid_configuration?.must_equal false
         end
+      end
+    end
+  end
 
-        it "returns true with a valid configuration" do
-          plugin.config = valid_enabled_config
-          plugin.valid_configuration?.must_equal true
-        end
+  private
+
+  def create_message_api_url
+    "https://www.yammer.com/api/v1/messages"
+  end
+
+  # fake click for the authorize step in Yammer, by hitting local webrick server
+  # loops repeating request until the server responds 200 OK
+  def fake_authorize_step(redirect_params = nil)
+    fork do
+      res = nil
+      while !res || res.code != "200"
+        uri = URI("#{plugin.class::OAUTH_REDIRECT_URL}/#{redirect_params}")
+        res = Net::HTTP.get_response(uri) rescue nil
+        sleep 0.1
       end
     end
   end

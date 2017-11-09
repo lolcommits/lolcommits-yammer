@@ -8,11 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = Lolcommits::Yammer::VERSION
   spec.authors       = ["Matthew Hutchinson"]
   spec.email         = ["matt@hiddenloop.com"]
-  spec.summary       = %q{Uploads lolcommits to a remote server}
+  spec.summary       = %q{Uploads lolcommits to Yammer}
 
   spec.description = <<-EOF
-  Uploads lolcommits to a remote server, with optional key or  HTTP based
-  authentication.
+  Automatically posts lolcommits as a new message to your Yammer account,
+  containing the captured image file, commit message text and #Lolcommits topic.
   EOF
 
   spec.homepage      = "https://github.com/lolcommits/lolcommits-yammer"
@@ -35,8 +35,8 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.0.0"
 
-  spec.add_runtime_dependency "rest-client"
   spec.add_runtime_dependency "yam"
+  spec.add_runtime_dependency "webrick"
 
   spec.add_development_dependency "lolcommits", ">= 0.9.5"
   spec.add_development_dependency "bundler"

@@ -2,27 +2,17 @@
 
 [![Gem Version](https://img.shields.io/gem/v/lolcommits-yammer.svg?style=flat)](http://rubygems.org/gems/lolcommits-yammer)
 [![Travis Build Status](https://travis-ci.org/lolcommits/lolcommits-yammer.svg?branch=master)](https://travis-ci.org/lolcommits/lolcommits-yammer)
-[![Test Coverage](https://codeclimate.com/github/lolcommits/lolcommits-yammer/badges/coverage.svg)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/coverage)
-[![Code Climate](https://codeclimate.com/github/lolcommits/lolcommits-yammer/badges/gpa.svg)](https://codeclimate.com/github/lolcommits/lolcommits-yammer)
+[![Code Climate](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/maintainability)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/test_coverage)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/test_coverage)
 [![Gem Dependency Status](https://gemnasium.com/badges/github.com/lolcommits/lolcommits-yammer.svg)](https://gemnasium.com/github.com/lolcommits/lolcommits-yammer)
 
 [lolcommits](https://lolcommits.github.io/) takes a snapshot with your webcam
 every time you git commit code, and archives a lolcat style image with it. Git
 blame has never been so much fun!
 
-This plugin uploads each lolcommit to a remote server after capturing. You
-configure the plugin by setting a remote endpoint to handle the HTTP post
-request. The following params will be sent:
-
-* `file` - captured lolcommit image file
-* `message` - the commit message
-* `repo` - repository name e.g. mroth/lolcommits
-* `sha` - commit SHA
-* `author_name` - the commit author name
-* `author_email` - the commit author email address
-* `key` - optional key (string) from plugin config
-
-You can also set an optional HTTP Basic Auth header (username and/or password).
+This plugin automatically posts lolcommits as a new message to your Yammer
+account, containing the captured image file, commit message text and #Lolcommits
+topic.
 
 ## Requirements
 
@@ -30,6 +20,7 @@ You can also set an optional HTTP Basic Auth header (username and/or password).
 * A webcam
 * [ImageMagick](http://www.imagemagick.org)
 * [ffmpeg](https://www.ffmpeg.org) (optional) for animated gif capturing
+* A [Yammer](http://yammer.com) account
 
 ## Installation
 
@@ -37,18 +28,20 @@ After installing the lolcommits gem, install this plugin with:
 
     $ gem install lolcommits-yammer
 
-Then configure to enable and set the remote endpoint:
+Then configure to enable with:
 
     $ lolcommits --config -p yammer
     # set enabled to `true`
-    # set the remote endpoint (must begin with http(s)://)
-    # optionally set a key (sent in params) and/or HTTP Basic Auth credentials
+    # confirm access for this plugin at yammer.com (link opens automatically)
 
-That's it! Provided the endpoint responds correctly, your next lolcommit will be
-uploaded to it. To disable use:
+That's it! Your next lolcommit will be posted to Yammer. To disable uninstall
+the gem or use:
 
     $ lolcommits --config -p yammer
     # and set enabled to `false`
+
+To revoke the access you granted this plugin, visit 'Edit Settings' -> 'My
+Applications' and select 'Revoke Access' for 'Lolcommits Yammer'.
 
 ## Development
 

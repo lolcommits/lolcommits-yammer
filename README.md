@@ -10,9 +10,13 @@
 every time you git commit code, and archives a lolcat style image with it. Git
 blame has never been so much fun!
 
-This plugin automatically posts lolcommits as a new message to your Yammer
-account, containing the captured image file, commit message text and #Lolcommits
-topic.
+This plugin automatically posts a new message to your Yammer account with the
+captured lolcommit image, your commit message and a 'Lolcommits' topic tag.
+Something like this:
+
+![example
+commit](https://github.com/lolcommits/lolcommits-yammer/raw/master/assets/images/example-commit.png)
+
 
 ## Requirements
 
@@ -35,13 +39,13 @@ Then configure to enable with:
     # confirm access for this plugin at yammer.com (link opens automatically)
 
 That's it! Your next lolcommit will be posted to Yammer. To disable uninstall
-the gem or use:
+this gem or use:
 
     $ lolcommits --config -p yammer
     # and set enabled to `false`
 
-To revoke the access you granted this plugin, visit 'Edit Settings' -> 'My
-Applications' and select 'Revoke Access' for 'Lolcommits Yammer'.
+To revoke plugin permissions at Yammer, visit 'Edit Settings' -> 'My
+Applications' and select 'Revoke Access' for the 'Lolcommits Yammer' app.
 
 ## Development
 
@@ -49,7 +53,7 @@ Check out this repo and run `bin/setup`, this will install all dependencies and
 generate docs. Use `bundle exec rake` to run all tests and generate a coverage
 report.
 
-You can also run `bin/console` for an interactive prompt that will allow you to
+You can also run `bin/console` for an interactive prompt, allowing you to
 experiment with the gem code.
 
 ## Tests

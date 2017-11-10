@@ -11,8 +11,8 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Uploads lolcommits to Yammer}
 
   spec.description = <<-EOF
-  Automatically posts lolcommits as a new message to your Yammer account,
-  containing the captured image file, commit message text and #Lolcommits topic.
+  Automatically posts a new message to your Yammer account with the captured
+  lolcommit image, your commit message and a 'Lolcommits' topic tag.
   EOF
 
   spec.homepage      = "https://github.com/lolcommits/lolcommits-yammer"

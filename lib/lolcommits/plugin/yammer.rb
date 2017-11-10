@@ -117,6 +117,7 @@ module Lolcommits
         puts authorize_url
         open_url(authorize_url)
         puts "\nLaunching local webbrick server to complete the OAuth process ...\n"
+        @oauth_code = nil
         begin
           trap('INT') { local_server.shutdown }
           trap('SIGTERM') { local_server.shutdown }
@@ -151,7 +152,15 @@ module Lolcommits
       end
 
       def local_server
-        @local_server ||= WEBrick::HTTPServer.new(Port: OAUTH_REDIRECT_PORT, Logger: nil, AccessLog: nil)
+        @local_server ||= WEBrick::HTTPServer.new(
+          Port: OAUTH_REDIRECT_PORT,
+          Logger: null_logger,
+          AccessLog: null_logger
+        )
+      end
+
+      def null_logger
+        WEBrick::Log.new(nil, -1)
       end
 
       def oauth_response(heading)

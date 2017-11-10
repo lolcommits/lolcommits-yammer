@@ -151,7 +151,7 @@ module Lolcommits
       end
 
       def local_server
-        @local_server ||= WEBrick::HTTPServer.new(Port: OAUTH_REDIRECT_PORT)
+        @local_server ||= WEBrick::HTTPServer.new(Port: OAUTH_REDIRECT_PORT, Logger: nil, AccessLog: nil)
       end
 
       def oauth_response(heading)

@@ -1,20 +1,19 @@
 require 'lolcommits/plugin/base'
 require 'lolcommits/cli/launcher'
-require 'net/http'
-require 'uri'
 require 'webrick'
+require 'rest-client'
 require 'cgi'
-require 'yammer'
 
 module Lolcommits
   module Plugin
     class Yammer < Base
 
-      YAMMER_CLIENT_ID        = 'abbxXRgeSagk9GtiWW9rFw'.freeze
-      YAMMER_CLIENT_SECRET    = 'gHVw5Ekyy2mWOWsBzrZPs5EPnR6s04RibApcbuy10'.freeze
-      YAMMER_ACCESS_TOKEN_URL = 'https://www.yammer.com/oauth2/access_token.json'.freeze
-      OAUTH_REDIRECT_PORT     = 5429
-      OAUTH_REDIRECT_URL      = "http://localhost:#{OAUTH_REDIRECT_PORT}".freeze
+      MESSAGES_API_URL    = "https://www.yammer.com/api/v1/messages".freeze
+      ACCESS_TOKEN_URL    = 'https://www.yammer.com/oauth2/access_token.json'.freeze
+      OAUTH_CLIENT_ID     = 'abbxXRgeSagk9GtiWW9rFw'.freeze
+      OAUTH_CLIENT_SECRET = 'gHVw5Ekyy2mWOWsBzrZPs5EPnR6s04RibApcbuy10'.freeze
+      OAUTH_REDIRECT_PORT = 5429
+      OAUTH_REDIRECT_URL  = "http://localhost:#{OAUTH_REDIRECT_PORT}".freeze
 
       ##
       # Returns the name of the plugin.
@@ -78,11 +77,14 @@ module Lolcommits
       #
       def run_capture_ready
         print "Posting to Yammer ... "
-        response = yammer.create_message(
-          yammer_message, attachment1: File.new(runner.main_image)
+        response = RestClient.post(
+          "https://www.yammer.com/api/v1/messages",
+          { body: yammer_message, attachment1: File.new(runner.main_image) },
+          { 'Authorization' => "Bearer #{configuration["access_token"]}" }
         )
-        debug response.body.inspect
+
         if response.code != 201
+          debug response.body.inspect
           raise "Invalid response code (#{response.code})"
         end
 
@@ -97,16 +99,6 @@ module Lolcommits
 
 
       private
-
-      def yammer
-        @yammer ||= begin
-          ::Yammer.configure do |c|
-            c.client_id = YAMMER_CLIENT_ID
-            c.client_secret = YAMMER_CLIENT_SECRET
-          end
-          ::Yammer::Client.new(access_token: configuration['access_token'])
-        end
-      end
 
       def yammer_message
         "#{runner.message} #lolcommits"
@@ -126,12 +118,13 @@ module Lolcommits
 
           if @oauth_code
             debug "Requesting Yammer OAuth Token with code: #{@oauth_code}"
-
-            oauth_response = Net::HTTP.post_form(URI(YAMMER_ACCESS_TOKEN_URL), {
-              'client_id'     => YAMMER_CLIENT_ID,
-              'client_secret' => YAMMER_CLIENT_SECRET,
-              'code'          => @oauth_code
-            })
+            oauth_response = RestClient.post(ACCESS_TOKEN_URL,
+              {
+                'client_id'     => OAUTH_CLIENT_ID,
+                'client_secret' => OAUTH_CLIENT_SECRET,
+                'code'          => @oauth_code
+              }
+            )
 
             if oauth_response.code.to_i == 200
               return JSON.parse(oauth_response.body)['access_token']['token']
@@ -144,7 +137,7 @@ module Lolcommits
       end
 
       def authorize_url
-        "https://www.yammer.com/oauth2/authorize?client_id=#{YAMMER_CLIENT_ID}&response_type=code&redirect_uri=#{OAUTH_REDIRECT_URL}"
+        "https://www.yammer.com/oauth2/authorize?client_id=#{OAUTH_CLIENT_ID}&response_type=code&redirect_uri=#{OAUTH_REDIRECT_URL}"
       end
 
       def open_url(url)

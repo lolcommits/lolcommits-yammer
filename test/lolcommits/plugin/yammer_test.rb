@@ -71,12 +71,11 @@ describe Lolcommits::Plugin::Yammer do
 
           output.must_equal "Posting to Yammer ... done!\n"
           assert_requested :post, create_message_api_url, times: 1, headers: {
-            'Accept'          => 'application/json',
-            'Accept-Encoding' => 'gzip, deflate',
-            'Authorization'   => 'Bearer oV4MuwnNKql3ebJMAYZRaD',
-            'Content-Type'    => /multipart\/form-data/,
-            'User-Agent'      => /Yammer Ruby Gem/
-          }
+            'Authorization' => 'Bearer oV4MuwnNKql3ebJMAYZRaD',
+            'Content-Type'  => /multipart\/form-data/
+          } do |req|
+            req.body.must_match(/Content-Disposition: form-data;.+name="attachment1"; filename="main_image.jpg.+"/)
+          end
         end
       end
 
@@ -88,7 +87,7 @@ describe Lolcommits::Plugin::Yammer do
           output.split("\n").must_equal(
             [
               "Posting to Yammer ... failed :(",
-              "Yammer error: Invalid response code (503)",
+              "Yammer error: 503 Service Unavailable",
               "Try a lolcommits capture with `--debug` and check for errors: `lolcommits -c --debug`"
             ]
           )
@@ -137,11 +136,11 @@ describe Lolcommits::Plugin::Yammer do
           yammer_oauth_code  = "yam-oauth-code"
           klass              = plugin.class
 
-          stub_request(:post, klass::YAMMER_ACCESS_TOKEN_URL).with(
+          stub_request(:post, klass::ACCESS_TOKEN_URL).with(
             body: {
-              "client_id"     => klass::YAMMER_CLIENT_ID,
-              "client_secret" => klass::YAMMER_CLIENT_SECRET,
-              "code"          => yammer_oauth_code
+              "client_id"     => klass::OAUTH_CLIENT_ID,
+              "client_secret" => klass::OAUTH_CLIENT_SECRET,
+              "code"          => [yammer_oauth_code]
             }
           ).to_return(
             status: 200,
@@ -170,7 +169,7 @@ describe Lolcommits::Plugin::Yammer do
   private
 
   def create_message_api_url
-    "https://www.yammer.com/api/v1/messages"
+    plugin.class::MESSAGES_API_URL
   end
 
   # fake click for the authorize step in Yammer, by hitting local webrick server

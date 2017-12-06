@@ -2,8 +2,8 @@
 
 [![Gem Version](https://img.shields.io/gem/v/lolcommits-yammer.svg?style=flat)](http://rubygems.org/gems/lolcommits-yammer)
 [![Travis Build Status](https://travis-ci.org/lolcommits/lolcommits-yammer.svg?branch=master)](https://travis-ci.org/lolcommits/lolcommits-yammer)
-[![Code Climate](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/maintainability)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/test_coverage)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/test_coverage)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/lolcommits/lolcommits-yammer.svg)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/maintainability)
+[![Test Coverage](https://img.shields.io/codeclimate/c/lolcommits/lolcommits-yammer.svg)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/test_coverage)
 [![Gem Dependency Status](https://gemnasium.com/badges/github.com/lolcommits/lolcommits-yammer.svg)](https://gemnasium.com/github.com/lolcommits/lolcommits-yammer)
 
 [lolcommits](https://lolcommits.github.io/) takes a snapshot with your webcam

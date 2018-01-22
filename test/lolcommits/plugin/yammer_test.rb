@@ -6,14 +6,6 @@ describe Lolcommits::Plugin::Yammer do
   include Lolcommits::TestHelpers::GitRepo
   include Lolcommits::TestHelpers::FakeIO
 
-  def plugin_name
-    "yammer"
-  end
-
-  it "should have a name" do
-    ::Lolcommits::Plugin::Yammer.name.must_equal plugin_name
-  end
-
   it "should run on capture ready" do
     ::Lolcommits::Plugin::Yammer.runner_order.must_equal [:capture_ready]
   end
@@ -22,11 +14,7 @@ describe Lolcommits::Plugin::Yammer do
     def runner
       # a simple lolcommits runner with an empty configuration Hash
       @runner ||= Lolcommits::Runner.new(
-        main_image: Tempfile.new('main_image.jpg'),
-        config: OpenStruct.new(
-          read_configuration: {},
-          loldir: File.expand_path("#{__dir__}../../../images")
-        )
+        main_image: Tempfile.new('main_image.jpg')
       )
     end
 
@@ -35,30 +23,26 @@ describe Lolcommits::Plugin::Yammer do
     end
 
     def valid_enabled_config
-      @config ||= OpenStruct.new(
-        read_configuration: {
-          "yammer" => {
-            "enabled" => true,
-            "access_token" => "oV4MuwnNKql3ebJMAYZRaD"
-          }
-        }
-      )
+      {
+        enabled: true,
+        access_token: "oV4MuwnNKql3ebJMAYZRaD"
+      }
     end
 
     describe "#enabled?" do
       it "is false by default" do
-        plugin.enabled?.must_equal false
+        assert_nil plugin.enabled?
       end
 
       it "is true when configured" do
-        plugin.config = valid_enabled_config
+        plugin.configuration = valid_enabled_config
         plugin.enabled?.must_equal true
       end
     end
 
     describe "run_capture_ready" do
       before do
-        plugin.config = valid_enabled_config
+        plugin.configuration = valid_enabled_config
         commit_repo_with_message("first commit!")
       end
 
@@ -96,13 +80,16 @@ describe Lolcommits::Plugin::Yammer do
     end
 
     describe "configuration" do
-      it "returns false when not configured" do
-        plugin.configured?.must_equal false
-      end
 
-      it "returns true when configured" do
-        plugin.config = valid_enabled_config
-        plugin.configured?.must_equal true
+      describe "#valid_configuration?" do
+        it "returns false when not configured correctly" do
+          plugin.valid_configuration?.must_equal false
+        end
+
+        it "returns true when configured" do
+          plugin.configuration = valid_enabled_config
+          plugin.valid_configuration?.must_equal true
+        end
       end
 
       describe "configuring with Yammer Oauth" do
@@ -127,7 +114,7 @@ describe Lolcommits::Plugin::Yammer do
             "Aborting.. Plugin disabled since Yammer Oauth was denied"
           )
 
-          configured_plugin_options.must_equal({ "enabled" => false })
+          configured_plugin_options.must_equal({ enabled: false })
         end
 
         it "configures successfully with a Yammer Oauth access token" do
@@ -158,8 +145,8 @@ describe Lolcommits::Plugin::Yammer do
           end
 
           configured_plugin_options.must_equal({
-            "enabled" => true,
-            "access_token" => "yam-oauth-token"
+            enabled: true,
+            access_token: "yam-oauth-token"
           })
         end
       end

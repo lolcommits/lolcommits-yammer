@@ -16,15 +16,6 @@ module Lolcommits
       OAUTH_REDIRECT_URL  = "http://localhost:#{OAUTH_REDIRECT_PORT}".freeze
 
       ##
-      # Returns the name of the plugin.
-      #
-      # @return [String] the plugin name
-      #
-      def self.name
-        'yammer'
-      end
-
-      ##
       # Returns position(s) of when this plugin should run during the capture
       # process. Posting to Yammer happens when a new capture is ready.
       #
@@ -35,13 +26,13 @@ module Lolcommits
       end
 
       ##
-      # Returns true if the plugin has been configured.
-      #
-      # @return [Boolean] true/false indicating if plugin has been configured.
+      # Returns true if the plugin has been configured correctly.
       # The access_token must be set.
       #
-      def configured?
-        !configuration['access_token'].nil?
+      # @return [Boolean] true/false
+      #
+      def valid_configuration?
+        !configuration[:access_token].nil?
       end
 
       ##
@@ -56,13 +47,13 @@ module Lolcommits
       #
       def configure_options!
         options = super
-        if options['enabled']
+        if options[:enabled]
           oauth_access_token = fetch_access_token
           if oauth_access_token
-            options.merge!('access_token' => oauth_access_token)
+            options.merge!(access_token: oauth_access_token)
           else
             puts "Aborting.. Plugin disabled since Yammer Oauth was denied"
-            options['enabled'] = false
+            options[:enabled] = false
           end
         end
         options
@@ -80,7 +71,7 @@ module Lolcommits
         response = RestClient.post(
           "https://www.yammer.com/api/v1/messages",
           { body: yammer_message, attachment1: File.new(runner.main_image) },
-          { 'Authorization' => "Bearer #{configuration["access_token"]}" }
+          { 'Authorization' => "Bearer #{configuration[:access_token]}" }
         )
 
         if response.code != 201

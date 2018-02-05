@@ -31,7 +31,7 @@ describe Lolcommits::Plugin::Yammer do
 
     describe "#enabled?" do
       it "is false by default" do
-        assert_nil plugin.enabled?
+        plugin.enabled?.must_equal false
       end
 
       it "is true when configured" do

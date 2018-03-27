@@ -16,16 +16,6 @@ module Lolcommits
       OAUTH_REDIRECT_URL  = "http://localhost:#{OAUTH_REDIRECT_PORT}".freeze
 
       ##
-      # Returns position(s) of when this plugin should run during the capture
-      # process. Posting to Yammer happens when a new capture is ready.
-      #
-      # @return [Array] the position(s) (:capture_ready)
-      #
-      def self.runner_order
-        [:capture_ready]
-      end
-
-      ##
       # Returns true if the plugin has been configured correctly.
       # The access_token must be set.
       #

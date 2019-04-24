@@ -1,22 +1,20 @@
-# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'lolcommits/yammer/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "lolcommits-yammer"
-  spec.version       = Lolcommits::Yammer::VERSION
-  spec.authors       = ["Matthew Hutchinson"]
-  spec.email         = ["matt@hiddenloop.com"]
-  spec.summary       = %q{Uploads lolcommits to Yammer}
+  spec.name     = "lolcommits-yammer"
+  spec.version  = Lolcommits::Yammer::VERSION
+  spec.authors  = ["Matthew Hutchinson"]
+  spec.email    = ["matt@hiddenloop.com"]
+  spec.summary  = %q{Uploads lolcommits to Yammer}
+  spec.homepage = "https://github.com/lolcommits/lolcommits-yammer"
+  spec.license  = "LGPL-3"
 
-  spec.description = <<-EOF
+  spec.description = <<-DESC
   Automatically posts a new message to your Yammer account with the captured
   lolcommit image, your commit message and a 'Lolcommits' topic tag.
-  EOF
-
-  spec.homepage      = "https://github.com/lolcommits/lolcommits-yammer"
-  spec.license       = "LGPL-3"
+  DESC
 
   spec.metadata = {
     "homepage_uri"    => "https://github.com/lolcommits/lolcommits-yammer",

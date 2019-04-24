@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'lolcommits/plugin/base'
 require 'lolcommits/cli/launcher'
 require 'webrick'

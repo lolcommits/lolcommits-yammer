@@ -1,7 +1,7 @@
 # Lolcommits Yammer
 
 [![Gem](https://img.shields.io/gem/v/lolcommits-yammer.svg?style=flat)](http://rubygems.org/gems/lolcommits-yammer)
-[![Travis](https://travis-ci.org/lolcommits/lolcommits-yammer.svg?branch=master)](https://travis-ci.org/lolcommits/lolcommits-yammer)
+[![Travis](https://img.shields.io/travis/com/lolcommits/lolcommits-yammer/master.svg?style=flat)](https://travis-ci.com/lolcommits/lolcommits-yammer)
 [![Depfu](https://img.shields.io/depfu/lolcommits/lolcommits-yammer.svg?style=flat)](https://depfu.com/github/lolcommits/lolcommits-yammer)
 [![Maintainability](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/maintainability)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/test_coverage)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/test_coverage)
@@ -82,7 +82,7 @@ GitHub.
 
 When submitting pull requests, remember to add tests covering any new behaviour,
 and ensure all tests are passing on [Travis
-CI](https://travis-ci.org/lolcommits/lolcommits-yammer). Read the
+CI](https://travis-ci.com/lolcommits/lolcommits-yammer). Read the
 [contributing
 guidelines](https://github.com/lolcommits/lolcommits-yammer/blob/master/CONTRIBUTING.md)
 for more details.
@@ -100,7 +100,7 @@ The gem is available as open source under the terms of
 
 ## Links
 
-* [Travis CI](https://travis-ci.org/lolcommits/lolcommits-yammer)
+* [Travis CI](https://travis-ci.com/lolcommits/lolcommits-yammer)
 * [Code Climate](https://codeclimate.com/github/lolcommits/lolcommits-yammer)
 * [Test Coverage](https://codeclimate.com/github/lolcommits/lolcommits-yammer/coverage)
 * [RDoc](http://rdoc.info/projects/lolcommits/lolcommits-yammer)

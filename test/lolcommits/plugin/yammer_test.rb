@@ -10,9 +10,8 @@ describe Lolcommits::Plugin::Yammer do
 
   describe "with a runner" do
     def runner
-      # a simple lolcommits runner with an empty configuration Hash
       @runner ||= Lolcommits::Runner.new(
-        main_image: Tempfile.new('main_image.jpg')
+        lolcommit_path: Tempfile.new('lolcommit.jpg').path
       )
     end
 
@@ -46,7 +45,7 @@ describe Lolcommits::Plugin::Yammer do
 
       after { teardown_repo }
 
-      it "posts lolcommit image to Yammer with commit message" do
+      it "posts lolcommit to Yammer with commit message" do
         in_repo do
           stub_request(:post, create_message_api_url).to_return(status: 201)
           output = fake_io_capture { plugin.run_capture_ready }
@@ -56,7 +55,7 @@ describe Lolcommits::Plugin::Yammer do
             'Authorization' => 'Bearer oV4MuwnNKql3ebJMAYZRaD',
             'Content-Type'  => /multipart\/form-data/
           } do |req|
-            req.body.must_match(/Content-Disposition: form-data;.+name="attachment1"; filename="main_image.jpg.+"/)
+            req.body.must_match(/Content-Disposition: form-data;.+name="attachment1"; filename="lolcommit.jpg.+"/)
           end
         end
       end

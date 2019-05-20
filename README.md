@@ -6,17 +6,16 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/maintainability)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/dc8b0801920bffbecf9f/test_coverage)](https://codeclimate.com/github/lolcommits/lolcommits-yammer/test_coverage)
 
-[lolcommits](https://lolcommits.github.io/) takes a snapshot with your webcam
-every time you git commit code, and archives a lolcat style image with it. Git
-blame has never been so much fun!
+[lolcommits](https://lolcommits.github.io/) takes a snapshot with your
+webcam every time you git commit code, and archives a lolcat style image
+with it. Git blame has never been so much fun!
 
-This plugin automatically posts a new message to your Yammer account with the
-captured lolcommit image, your commit message and a 'Lolcommits' topic tag.
-Something like this:
+This plugin automatically posts a new message to your Yammer account
+with the captured lolcommit, your commit message and a 'Lolcommits'
+topic tag. Something like this:
 
 ![example
 commit](https://github.com/lolcommits/lolcommits-yammer/raw/master/assets/images/example-commit.png)
-
 
 ## Requirements
 
@@ -38,23 +37,24 @@ Then configure to enable with:
     # set enabled to `true`
     # confirm access for this plugin at yammer.com (link opens automatically)
 
-That's it! Your next lolcommit will be posted to Yammer. To disable uninstall
-this gem or use:
+That's it! Your next lolcommit will be posted to Yammer. To disable
+uninstall this gem or use:
 
     $ lolcommits --config -p yammer
     # and set enabled to `false`
 
 To revoke plugin permissions at Yammer, visit 'Edit Settings' -> 'My
-Applications' and select 'Revoke Access' for the 'Lolcommits Yammer' app.
+Applications' and select 'Revoke Access' for the 'Lolcommits Yammer'
+app.
 
 ## Development
 
-Check out this repo and run `bin/setup`, this will install all dependencies and
-generate docs. Use `bundle exec rake` to run all tests and generate a coverage
-report.
+Check out this repo and run `bin/setup`, this will install all
+dependencies and generate docs. Use `bundle exec rake` to run all tests
+and generate a coverage report.
 
-You can also run `bin/console` for an interactive prompt, allowing you to
-experiment with the gem code.
+You can also run `bin/console` for an interactive prompt, allowing you
+to experiment with the gem code.
 
 ## Tests
 
@@ -71,25 +71,27 @@ Generate docs for this gem with:
 ## Troubles?
 
 If you think something is broken or missing, please raise a new
-[issue](https://github.com/lolcommits/lolcommits-yammer/issues). Take
-a moment to check it hasn't been raised in the past (and possibly closed).
+[issue](https://github.com/lolcommits/lolcommits-yammer/issues). Take a
+moment to check it hasn't been raised in the past (and possibly closed).
 
 ## Contributing
 
-Bug [reports](https://github.com/lolcommits/lolcommits-yammer/issues) and [pull
-requests](https://github.com/lolcommits/lolcommits-yammer/pulls) are welcome on
-GitHub.
+Bug [reports](https://github.com/lolcommits/lolcommits-yammer/issues)
+and [pull
+requests](https://github.com/lolcommits/lolcommits-yammer/pulls) are
+welcome on GitHub.
 
-When submitting pull requests, remember to add tests covering any new behaviour,
-and ensure all tests are passing on [Travis
+When submitting pull requests, remember to add tests covering any new
+behaviour, and ensure all tests are passing on [Travis
 CI](https://travis-ci.com/lolcommits/lolcommits-yammer). Read the
 [contributing
 guidelines](https://github.com/lolcommits/lolcommits-yammer/blob/master/CONTRIBUTING.md)
 for more details.
 
-This project is intended to be a safe, welcoming space for collaboration, and
-contributors are expected to adhere to the [Contributor
-Covenant](http://contributor-covenant.org) code of conduct. See
+This project is intended to be a safe, welcoming space for
+collaboration, and contributors are expected to adhere to the
+[Contributor Covenant](http://contributor-covenant.org) code of conduct.
+See
 [here](https://github.com/lolcommits/lolcommits-yammer/blob/master/CODE_OF_CONDUCT.md)
 for more details.
 

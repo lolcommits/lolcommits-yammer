@@ -30,8 +30,8 @@ module Lolcommits
       ##
       # Prompts the user to configure the plugin.
       #
-      # If the enabled option is set we attempt to fetch an Oauth token via
-      # Yammers' Oauth 2 Server Side flow.
+      # If the enabled option is set we attempt to fetch an Oauth token
+      # via Yammers' Oauth 2 Server Side flow.
       #
       # https://developer.yammer.com/docs/oauth-2#server-side-flow
       #
@@ -52,9 +52,9 @@ module Lolcommits
       end
 
       ##
-      # Post-capture hook, runs after lolcommits captures a snapshot. Posts the
-      # lolcommit image file to Yammer with a commit message postfixed by a
-      # #lolcommits topic/hashtag.
+      # Post-capture hook, runs after lolcommits captures a snapshot.
+      # Posts the lolcommit file to Yammer with a commit message
+      # postfixed by a #lolcommits topic/hashtag.
       #
       # @return [Boolean] true/false indicating posting was successful
       #
@@ -62,7 +62,7 @@ module Lolcommits
         print "Posting to Yammer ... "
         response = RestClient.post(
           "https://www.yammer.com/api/v1/messages",
-          { body: yammer_message, attachment1: File.new(runner.main_image) },
+          { body: yammer_message, attachment1: File.new(runner.lolcommit_path) },
           { 'Authorization' => "Bearer #{configuration[:access_token]}" }
         )
 

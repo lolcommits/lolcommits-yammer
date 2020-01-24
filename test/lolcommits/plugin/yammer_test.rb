@@ -28,12 +28,12 @@ describe Lolcommits::Plugin::Yammer do
 
     describe "#enabled?" do
       it "is false by default" do
-        plugin.enabled?.must_equal false
+        _(plugin.enabled?).must_equal false
       end
 
       it "is true when configured" do
         plugin.configuration = valid_enabled_config
-        plugin.enabled?.must_equal true
+        _(plugin.enabled?).must_equal true
       end
     end
 
@@ -50,12 +50,12 @@ describe Lolcommits::Plugin::Yammer do
           stub_request(:post, create_message_api_url).to_return(status: 201)
           output = fake_io_capture { plugin.run_capture_ready }
 
-          output.must_equal "Posting to Yammer ... done!\n"
+          _(output).must_equal "Posting to Yammer ... done!\n"
           assert_requested :post, create_message_api_url, times: 1, headers: {
             'Authorization' => 'Bearer oV4MuwnNKql3ebJMAYZRaD',
             'Content-Type'  => /multipart\/form-data/
           } do |req|
-            req.body.must_match(/Content-Disposition: form-data;.+name="attachment1"; filename="lolcommit.jpg.+"/)
+            _(req.body).must_match(/Content-Disposition: form-data;.+name="attachment1"; filename="lolcommit.jpg.+"/)
           end
         end
       end
@@ -65,7 +65,7 @@ describe Lolcommits::Plugin::Yammer do
           stub_request(:post, create_message_api_url).to_return(status: 503)
           output = fake_io_capture { plugin.run_capture_ready }
 
-          output.split("\n").must_equal(
+          _(output.split("\n")).must_equal(
             [
               "Posting to Yammer ... failed :(",
               "Yammer error: 503 Service Unavailable",
@@ -80,12 +80,12 @@ describe Lolcommits::Plugin::Yammer do
 
       describe "#valid_configuration?" do
         it "returns false when not configured correctly" do
-          plugin.valid_configuration?.must_equal false
+          _(plugin.valid_configuration?).must_equal false
         end
 
         it "returns true when configured" do
           plugin.configuration = valid_enabled_config
-          plugin.valid_configuration?.must_equal true
+          _(plugin.valid_configuration?).must_equal true
         end
       end
 
@@ -107,11 +107,11 @@ describe Lolcommits::Plugin::Yammer do
             configured_plugin_options = plugin.configure_options!
           end
 
-          output.split("\n").last.must_equal(
+          _(output.split("\n").last).must_equal(
             "Aborting.. Plugin disabled since Yammer Oauth was denied"
           )
 
-          configured_plugin_options.must_equal({ enabled: false })
+          _(configured_plugin_options).must_equal({ enabled: false })
         end
 
         it "configures successfully with a Yammer Oauth access token" do
@@ -141,7 +141,7 @@ describe Lolcommits::Plugin::Yammer do
             configured_plugin_options = plugin.configure_options!
           end
 
-          configured_plugin_options.must_equal({
+          _(configured_plugin_options).must_equal({
             enabled: true,
             access_token: "yam-oauth-token"
           })
